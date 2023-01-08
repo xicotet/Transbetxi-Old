@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:id="@+id/card_view"
+    android:layout_marginBottom="20dp"
+    app:cardBackgroundColor="#DCD7D4"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="5dp">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/constraint_layout">
+
+        <TextView
+            android:id="@+id/tvStageId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="TC1"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvStageName"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="Circuit Camí de Monserrat"
+            android:textSize="23sp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvStageId"
+            app:layout_constraintBottom_toBottomOf="@+id/tvStageId"
+            app:layout_constraintLeft_toRightOf="@id/tvStageId"
+            app:layout_constraintTop_toTopOf="@+id/tvStageId" />
+
+        <TextView
+            android:id="@+id/tvStageDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5.5km"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@+id/roadImage"
+            app:layout_constraintStart_toEndOf="@+id/roadImage"
+            app:layout_constraintTop_toTopOf="@+id/roadImage" />
+
+        <ImageView
+            android:id="@+id/roadImage"
+            android:layout_width="52dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@+id/tvStageId"
+            app:layout_constraintTop_toBottomOf="@+id/tvStageName"
+            app:srcCompat="@drawable/ic_baseline_route_24" />
+
+        <ImageView
+            android:id="@+id/timeImage"
+            android:layout_width="52dp"
+            android:layout_height="34dp"
+            app:layout_constraintStart_toEndOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/roadImage"
+            app:srcCompat="@drawable/ic_baseline_schedule_24" />
+
+        <TextView
+            android:id="@+id/tvStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:00"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@+id/timeImage"
+            app:layout_constraintStart_toEndOf="@+id/timeImage"
+            app:layout_constraintTop_toTopOf="@+id/roadImage" />
+
+        <LinearLayout
+            android:id="@+id/options_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@+id/tvStageId"
+            app:layout_constraintStart_toEndOf="@+id/tvStageName">
+
+            <Button
+                android:id="@+id/option_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Option 1" />
+
+            <Button
+                android:id="@+id/option_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Option 2" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
