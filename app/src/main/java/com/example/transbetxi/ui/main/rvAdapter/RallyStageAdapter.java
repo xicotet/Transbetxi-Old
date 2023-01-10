@@ -58,6 +58,7 @@ public class RallyStageAdapter extends RecyclerView.Adapter<RallyStageAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stage_item, parent, false);
+        v.setVisibility(View.VISIBLE);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }

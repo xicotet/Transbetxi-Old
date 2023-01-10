@@ -9,7 +9,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -67,7 +69,11 @@ public class MainFragment extends Fragment  {
                 transaction.commit();
             }
         });
+
+        rallyStageRecyclerView.setItemAnimator(new RvItemAnimator());
+
         rallyStageRecyclerView.setAdapter(adapter);
+
 
         SwipeHelper swipeHelper = new SwipeHelper(getContext(), rallyStageRecyclerView) {
             @Override
@@ -97,7 +103,7 @@ public class MainFragment extends Fragment  {
                 ));
                 underlayButtons.add(new UnderlayButton(
                         "Cómo llegar",
-                        R.drawable.ic_baseline_directions_48,
+                        R.drawable.ic_baseline_directions_24,
                         Color.parseColor("#F5E7DF"),
                         new UnderlayButtonClickListener() {
                             @Override
@@ -108,7 +114,6 @@ public class MainFragment extends Fragment  {
                 ));
             }
         };
-
         return view;
     }
 
@@ -149,5 +154,17 @@ public class MainFragment extends Fragment  {
         rallyStages.add(tc5);
 
         return rallyStages;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
     }
 }
