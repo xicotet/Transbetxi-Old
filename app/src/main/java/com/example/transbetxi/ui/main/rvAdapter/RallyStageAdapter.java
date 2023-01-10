@@ -35,6 +35,10 @@ public class RallyStageAdapter extends RecyclerView.Adapter<RallyStageAdapter.Vi
         this.listener = listener;
     }
 
+    public ViewHolder getViewHolder(){
+        return getViewHolder();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView stageName;
         public TextView stageDistance;
@@ -48,6 +52,8 @@ public class RallyStageAdapter extends RecyclerView.Adapter<RallyStageAdapter.Vi
             stageStartTime = itemView.findViewById(R.id.tvStartTime);
             stageDistance = itemView.findViewById(R.id.tvStageDistance);
         }
+
+
     }
 
     public RallyStageAdapter(List<RallyStage> rallyStages) {

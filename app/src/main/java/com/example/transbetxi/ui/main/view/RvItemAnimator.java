@@ -11,16 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 class RvItemAnimator extends DefaultItemAnimator {
 
+    interface AnimationCallback {
+        void onAnimationFinished();
+    }
+
     @Override
     public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder,
                                  int fromLeft, int fromTop, int toLeft, int toTop) {
-        Log.i("entra", "si");
+
         if (oldHolder == null || newHolder == null) {
             // cannot animate
             return false;
         }
         final ViewPropertyAnimatorCompat oldViewAnim = ViewCompat.animate(oldHolder.itemView);
-        oldViewAnim.setDuration(200)
+        oldViewAnim.setDuration(400)
                 .translationX(-oldHolder.itemView.getWidth())
                 .alpha(0)
                 .setListener(new ViewPropertyAnimatorListener() {
@@ -51,7 +55,7 @@ class RvItemAnimator extends DefaultItemAnimator {
 
     private void animateChange(RecyclerView.ViewHolder holder) {
         final ViewPropertyAnimatorCompat newViewAnimation = ViewCompat.animate(holder.itemView);
-        Log.i("entra", "si");
+
         newViewAnimation.translationX(0).alpha(1).setDuration(200)
                 .setListener(new ViewPropertyAnimatorListener() {
                     @Override

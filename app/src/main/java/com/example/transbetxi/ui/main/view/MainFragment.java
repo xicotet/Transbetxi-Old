@@ -70,11 +70,6 @@ public class MainFragment extends Fragment  {
             }
         });
 
-        rallyStageRecyclerView.setItemAnimator(new RvItemAnimator());
-
-        rallyStageRecyclerView.setAdapter(adapter);
-
-
         SwipeHelper swipeHelper = new SwipeHelper(getContext(), rallyStageRecyclerView) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
@@ -114,7 +109,21 @@ public class MainFragment extends Fragment  {
                 ));
             }
         };
+
+        RvItemAnimator animator = new RvItemAnimator(new RvItemAnimator.AnimationCallback() {
+            @Override
+            public void onAnimationFinished() {
+                //call the method on SwipeHelper
+                swipeHelper.onSwiped(rallyStageRecyclerView.getViewHolder(), 4);
+            }
+        });
+
+        rallyStageRecyclerView.setItemAnimator(new RvItemAnimator());
+
+        rallyStageRecyclerView.setAdapter(adapter);
+
         return view;
+
     }
 
 
@@ -159,12 +168,23 @@ public class MainFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-        rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
+
+        rallyStageRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
+        rallyStageRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
+            }
+        });
     }
 }
