@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -110,22 +113,44 @@ public class MainFragment extends Fragment  {
             }
         };
 
-        RvItemAnimator animator = new RvItemAnimator(new RvItemAnimator.AnimationCallback() {
-            @Override
-            public void onAnimationFinished() {
-                //call the method on SwipeHelper
-                swipeHelper.onSwiped(rallyStageRecyclerView.getViewHolder(), 4);
-            }
-        });
-
         rallyStageRecyclerView.setItemAnimator(new RvItemAnimator());
 
         rallyStageRecyclerView.setAdapter(adapter);
 
+        rallyStageRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("llega", "llega");
+                View firstItem = rallyStageRecyclerView.getChildAt(0);
+
+                // Set up touch event down and move coordinates
+                float downX = firstItem.getX();
+                float downY = firstItem.getY();
+                float moveX = downX - 982.562f;
+                float moveY = downY;
+
+                // Dispatch touch event to simulate press on the item
+                long downTime = SystemClock.uptimeMillis();
+                long eventTime = SystemClock.uptimeMillis() + 100;
+                MotionEvent downEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, downX, downY, 0);
+                firstItem.dispatchTouchEvent(downEvent);
+
+
+// Dispatch touch event to simulate swipe left
+                eventTime = SystemClock.uptimeMillis() + 10000;
+                MotionEvent moveEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, moveX, moveY, 0);
+                firstItem.dispatchTouchEvent(moveEvent);
+
+// Dispatch touch event to simulate release
+                eventTime = SystemClock.uptimeMillis() + 100;
+                MotionEvent upEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, moveX, moveY, 0);
+                firstItem.dispatchTouchEvent(upEvent);
+            }
+        });
+
         return view;
 
     }
-
 
     private List<RallyStage> getRallyStages() {
         RallyStage tcp = new RallyStage("Circuit Camí de Monserrat",
@@ -168,23 +193,10 @@ public class MainFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-
-        rallyStageRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
-            }
-        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        rallyStageRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                rallyStageRecyclerView.getAdapter().notifyItemChanged(0, "SWIPE_LEFT");
-            }
-        });
     }
 }

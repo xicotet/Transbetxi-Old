@@ -238,6 +238,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             p.setColor(color);
 
             if (buttonNumber == 2){
+                Log.i("izquierda", String.valueOf(rect.right - 2));
                 //Boton izquierda del todo
                 RectF inner = new RectF(rect.right - 2, rect.top, rect.right, rect.bottom);
                 float[] radii = {cornerRadius, cornerRadius, 0, 0, 0, 0, cornerRadius, cornerRadius}; //x, y corner radii for top left, top right, bottom right, bottom left corners
@@ -263,7 +264,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             Resources resources = context.getResources();
             Drawable drawable = resources.getDrawable(imageResId);
 
-// Set the bounds of the drawable
+            // Set the bounds of the drawable
             int distance = (int) ((rect.right - rect.left - drawable.getIntrinsicWidth()) / 2);
             int verticalDistance = (int) ((((rect.bottom - rect.top) / 2) - (drawable.getIntrinsicHeight())) / 2);
             int left = (int) (rect.left + distance);
@@ -272,7 +273,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             int bottom = (int) (top + drawable.getIntrinsicHeight());
             drawable.setBounds(left, top, right, bottom);
 
-// Draw the drawable on the canvas
+            // Draw the drawable on the canvas
             c.save();
             drawable.draw(c);
 
