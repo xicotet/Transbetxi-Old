@@ -113,8 +113,6 @@ public class MainFragment extends Fragment  {
             }
         };
 
-        rallyStageRecyclerView.setItemAnimator(new RvItemAnimator());
-
         rallyStageRecyclerView.setAdapter(adapter);
 
         rallyStageRecyclerView.post(new Runnable() {
@@ -137,7 +135,7 @@ public class MainFragment extends Fragment  {
 
 
 // Dispatch touch event to simulate swipe left
-                eventTime = SystemClock.uptimeMillis() + 10000;
+                eventTime = SystemClock.uptimeMillis() + 100;
                 MotionEvent moveEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, moveX, moveY, 0);
                 firstItem.dispatchTouchEvent(moveEvent);
 
