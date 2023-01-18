@@ -43,6 +43,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     private GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener(){
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.i("entra","si");
             for (UnderlayButton button : buttons){
                 if(button.onClick(e.getX(), e.getY()))
                     break;
@@ -55,6 +56,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent e) {
+
             if (swipedPos < 0) return false;
             Point point = new Point((int) e.getRawX(), (int) e.getRawY());
 
@@ -78,11 +80,13 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     public SwipeHelper(Context context, RecyclerView recyclerView) {
         super(0, ItemTouchHelper.LEFT);
+        Log.i("llegaste", "si");
         this.recyclerView = recyclerView;
         this.mContext = context;
         this.buttons = new ArrayList<>();
         this.gestureDetector = new GestureDetector(context, gestureListener);
         this.recyclerView.setOnTouchListener(onTouchListener);
+
         buttonsBuffer = new HashMap<>();
         recoverQueue = new LinkedList<Integer>(){
             @Override
@@ -121,6 +125,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         buttonsBuffer.clear();
         swipeThreshold = 0.5f * buttons.size() * BUTTON_WIDTH;
         recoverSwipedItem();
+
     }
 
     @Override
@@ -140,6 +145,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
         int pos = viewHolder.getAbsoluteAdapterPosition();
         float translationX = dX;
         View itemView = viewHolder.itemView;

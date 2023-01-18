@@ -23,8 +23,16 @@ import android.view.ViewGroup;
 
 import com.example.transbetxi.R;
 import com.example.transbetxi.data.RallyStage;
+import com.example.transbetxi.databinding.FragmentMainBinding;
 import com.example.transbetxi.ui.main.rvAdapter.RallyStageAdapter;
 import com.example.transbetxi.ui.main.viewmodel.MainViewModel;
+
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.action.GeneralSwipeAction;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swipe;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,30 +126,36 @@ public class MainFragment extends Fragment  {
         rallyStageRecyclerView.post(new Runnable() {
             @Override
             public void run() {
-                Log.i("llega", "llega");
                 View firstItem = rallyStageRecyclerView.getChildAt(0);
 
-                // Set up touch event down and move coordinates
-                float downX = firstItem.getX();
-                float downY = firstItem.getY();
-                float moveX = downX - 982.562f;
-                float moveY = downY;
+                                // Set up touch event down and move coordinate
 
                 // Dispatch touch event to simulate press on the item
                 long downTime = SystemClock.uptimeMillis();
-                long eventTime = SystemClock.uptimeMillis() + 100;
-                MotionEvent downEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, downX, downY, 0);
+
+                float x = firstItem.getX() + 500;
+                float y = firstItem.getY() + 200;
+
+                long eventTime = SystemClock.uptimeMillis();
+                MotionEvent downEvent = MotionEvent.obtain(downTime, eventTime,
+                        MotionEvent.ACTION_DOWN, x, y, 0);
                 firstItem.dispatchTouchEvent(downEvent);
 
 
-// Dispatch touch event to simulate swipe left
-                eventTime = SystemClock.uptimeMillis() + 100;
-                MotionEvent moveEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, moveX, moveY, 0);
-                firstItem.dispatchTouchEvent(moveEvent);
+                long swipeTime = SystemClock.uptimeMillis();
+                MotionEvent swipeEvent = MotionEvent.obtain(downTime, swipeTime,
+                        MotionEvent.ACTION_MOVE, x - 200, y, 0);
+                firstItem.dispatchTouchEvent(swipeEvent);
 
-// Dispatch touch event to simulate release
-                eventTime = SystemClock.uptimeMillis() + 100;
-                MotionEvent upEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, moveX, moveY, 0);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                long upTime = SystemClock.uptimeMillis();
+                MotionEvent upEvent = MotionEvent.obtain(downTime, upTime,
+                        MotionEvent.ACTION_UP, x, y, 0);
                 firstItem.dispatchTouchEvent(upEvent);
             }
         });
