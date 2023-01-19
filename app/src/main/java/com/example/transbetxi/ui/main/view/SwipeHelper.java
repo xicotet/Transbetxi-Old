@@ -43,7 +43,6 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     private GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener(){
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("entra","si");
             for (UnderlayButton button : buttons){
                 if(button.onClick(e.getX(), e.getY()))
                     break;
@@ -53,11 +52,17 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
     };
 
-    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+    public View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent e) {
+            Log.i("arasi", "jatentenc");
+            if (swipedPos < 0) {
+                Log.i("arasi", "retorna false");
+                return false;
 
-            if (swipedPos < 0) return false;
+
+            }
+            Log.i("arasi", "retorna true");
             Point point = new Point((int) e.getRawX(), (int) e.getRawY());
 
             RecyclerView.ViewHolder swipedViewHolder = recyclerView.findViewHolderForAdapterPosition(swipedPos);
@@ -66,6 +71,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             swipedItem.getGlobalVisibleRect(rect);
 
             if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_UP ||e.getAction() == MotionEvent.ACTION_MOVE) {
+
                 if (rect.top < point.y && rect.bottom > point.y)
                     gestureDetector.onTouchEvent(e);
                 else {
