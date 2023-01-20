@@ -43,6 +43,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     private GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener(){
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.i("arasi", "gestureListener");
             for (UnderlayButton button : buttons){
                 if(button.onClick(e.getX(), e.getY()))
                     break;
@@ -55,14 +56,13 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     public View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent e) {
-            Log.i("arasi", "jatentenc");
+            Log.i("arasi", "onTouchComenç");
             if (swipedPos < 0) {
-                Log.i("arasi", "retorna false");
                 return false;
 
 
             }
-            Log.i("arasi", "retorna true");
+            Log.i("arasi", "onTouchDespresIf");
             Point point = new Point((int) e.getRawX(), (int) e.getRawY());
 
             RecyclerView.ViewHolder swipedViewHolder = recyclerView.findViewHolderForAdapterPosition(swipedPos);
@@ -86,7 +86,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     public SwipeHelper(Context context, RecyclerView recyclerView) {
         super(0, ItemTouchHelper.LEFT);
-        Log.i("llegaste", "si");
+        Log.i("arasi", "constructor");
         this.recyclerView = recyclerView;
         this.mContext = context;
         this.buttons = new ArrayList<>();
@@ -110,12 +110,13 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        Log.i("arasi", "onMove");
         return false;
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.i("entra",viewHolder.toString());
+        Log.i("arasi","onSwipped");
         int pos = viewHolder.getAbsoluteAdapterPosition();
 
         if (swipedPos != pos)
@@ -151,7 +152,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
+        Log.i("arasi", "onChildDraw");
         int pos = viewHolder.getAbsoluteAdapterPosition();
         float translationX = dX;
         View itemView = viewHolder.itemView;
