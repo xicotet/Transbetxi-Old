@@ -87,5 +87,7 @@ public class RallyStageAdapter extends RecyclerView.Adapter<RallyStageAdapter.Vi
     public int getItemCount() {
         return rallyStages.size();
     }
+
+
 }
 

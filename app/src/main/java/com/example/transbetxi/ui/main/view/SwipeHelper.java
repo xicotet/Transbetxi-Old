@@ -57,6 +57,14 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         @Override
         public boolean onTouch(View view, MotionEvent e) {
             Log.i("arasi", "onTouchComenç");
+            Log.i("MotionEvent", "X: " + e.getX() + "  Y: "+ e.getY() +
+                    "\nDownTime: " + e.getDownTime() + "   EventTime: " + e.getEventTime()
+                    +"\nAction: " + e.getAction() + "   MetaState: " + e.getMetaState()
+                    +"\nDeviceId: " + e.getDeviceId() + "   Pressure: " + e.getPressure()
+                    + "\nSize: " + e.getSize() + "  X Precission: " + e.getXPrecision()
+                    + "\nY Precission: " + e.getYPrecision() + "   EdgeFlags: " + e.getEdgeFlags()
+                    + "\nPointerCount: " + e.getPointerCount() + "   "
+                    + "\n---------------------------------------------\n");
             if (swipedPos < 0) {
                 return false;
 
@@ -116,7 +124,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.i("arasi","onSwipped");
+        Log.i("arasi","onSwipped" +  direction);
         int pos = viewHolder.getAbsoluteAdapterPosition();
 
         if (swipedPos != pos)
@@ -153,6 +161,13 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         Log.i("arasi", "onChildDraw");
+        Log.i("onChildDraw", c.toString());
+        Log.i("onChildDraw", recyclerView.toString());
+        Log.i("onChildDraw", String.valueOf(dX));
+        Log.i("onChildDraw", String.valueOf(dY));
+        Log.i("onChildDraw", String.valueOf(actionState));
+
+        Log.i("onChildDraw", String.valueOf(isCurrentlyActive));
         int pos = viewHolder.getAbsoluteAdapterPosition();
         float translationX = dX;
         View itemView = viewHolder.itemView;
@@ -183,6 +198,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     }
 
     private synchronized void recoverSwipedItem(){
+        Log.i("arasi", "recoverSwipedItem");
         while (!recoverQueue.isEmpty()){
             int pos = recoverQueue.poll();
             if (pos > -1) {
@@ -192,6 +208,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     }
 
     private void drawButtons(Canvas c, View itemView, List<UnderlayButton> buffer, int pos, float dX){
+        Log.i("arasi", "drawButtons");
         float right = itemView.getRight();
         float dButtonWidth = (-1) * dX / buffer.size();
         for (UnderlayButton button : buffer) {
@@ -214,6 +231,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     }
 
     public void attachSwipe(){
+        Log.i("arasi", "attachSwipe");
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
@@ -229,6 +247,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         private UnderlayButtonClickListener clickListener;
 
         public UnderlayButton(String text, int imageResId, int color, UnderlayButtonClickListener clickListener) {
+            Log.i("arasi", "UnderlayButton");
             this.text = text;
             this.imageResId = imageResId;
             this.color = color;
@@ -236,6 +255,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
 
         public boolean onClick(float x, float y){
+            Log.i("arasi", "UnderlayButton - onClick");
             if (clickRegion != null && clickRegion.contains(x, y)){
                 clickListener.onClick(pos);
                 return true;
@@ -245,6 +265,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
 
         public void onDraw(Canvas c, RectF rect, int pos, int buttonNumber){
+            Log.i("arasi", "onDraw");
             Paint p = new Paint();
             float cornerRadius = 50;
             // Draw background
