@@ -3,22 +3,17 @@ package com.example.transbetxi.ui.main.view;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Instrumentation;
-import android.gesture.Gesture;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.SystemClock;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +21,6 @@ import android.view.ViewGroup;
 
 import com.example.transbetxi.R;
 import com.example.transbetxi.data.RallyStage;
-import com.example.transbetxi.databinding.FragmentMainBinding;
 import com.example.transbetxi.ui.main.rvAdapter.RallyStageAdapter;
 import com.example.transbetxi.ui.main.viewmodel.MainViewModel;
 
@@ -67,29 +61,12 @@ public class MainFragment extends Fragment {
 
         adapter = new RallyStageAdapter(rallyStages);
 
-
-        //Cuando se hace click en un elemento del recyclerView
-        adapter.setOnItemClickListener(new RallyStageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                // Open the StageMapFragment when an item is clicked
-
-                StageMapFragment fragment = new StageMapFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
-            }
-        });
-
-
         SwipeHelper swipeHelper = new SwipeHelper(getContext(), rallyStageRecyclerView) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                 underlayButtons.add(new UnderlayButton(
                         "Fotos",
-                        R.drawable.ic_baseline_add_a_photo_24,
+                        R.drawable.ic_baseline_add_a_photo_28,
                         Color.parseColor("#B8C0AD"),
                         new UnderlayButtonClickListener() {
                             @Override
@@ -101,7 +78,7 @@ public class MainFragment extends Fragment {
 
                 underlayButtons.add(new UnderlayButton(
                         "Resultados",
-                        R.drawable.ic_baseline_timer_24,
+                        R.drawable.ic_baseline_timer_28,
                         Color.parseColor("#F7C3A3"),
                         new UnderlayButtonClickListener() {
                             @Override
@@ -112,7 +89,7 @@ public class MainFragment extends Fragment {
                 ));
                 underlayButtons.add(new UnderlayButton(
                         "Cómo llegar",
-                        R.drawable.ic_baseline_directions_24,
+                        R.drawable.ic_baseline_directions_28,
                         Color.parseColor("#F5E7DF"),
                         new UnderlayButtonClickListener() {
                             @Override
@@ -124,8 +101,50 @@ public class MainFragment extends Fragment {
             }
         };
 
+        //Cuando se hace click en un elemento del recyclerView
+        adapter.setOnItemClickListener(new RallyStageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                    // Open the StageMapFragment when an item is clicked
+                    Log.i("position", String.valueOf(position));
+                    StageMapFragment fragment = new StageMapFragment();
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+
+
+        });
+
         rallyStageRecyclerView.setAdapter(adapter);
-        createStartSwipeAnimation(true);
+
+
+        rallyStageRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!swipeHelper.getFirstSwipeHasOccurred()){
+                    createSwipeItemAnimation(0);
+
+                }
+
+            }
+        }, 500);
+
+        rallyStageRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Return item to its original position
+                    Log.i("valencianista", String.valueOf(swipeHelper.recoverQueue));
+                    rallyStageRecyclerView.getAdapter().notifyItemChanged(0);
+                    Log.i("valencianista", String.valueOf(swipeHelper.recoverQueue));
+
+                Log.i("sellama", "recoverItem");
+            }
+        }, 1000);
+
+
         return view;
 
     }
@@ -135,50 +154,37 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void createStartSwipeAnimation(boolean swipeLeft) {
-        rallyStageRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    public void createSwipeItemAnimation(int itemPosition) {
+        Log.i("sellama", "createItem");
+        float startX = rallyStageRecyclerView.getChildAt(itemPosition).getRight();
+        float fixedY = rallyStageRecyclerView.getChildAt(itemPosition).getTop();
 
-                float startX =  rallyStageRecyclerView.getChildAt(0).getRight();
-                float startY = rallyStageRecyclerView.getChildAt(0).getY();
-                float endX = rallyStageRecyclerView.getChildAt(0).getX();
-                float endY = startY;
+        float endX = rallyStageRecyclerView.getChildAt(itemPosition).getLeft();
 
-                if (!swipeLeft) {
-                    float swap = startX;
-                    startX = endX;
-                    endX = swap;
-                }
+        int steps = 20;
+        float xStep = ((endX - startX) / steps);
 
-                int steps = 20;
-                float xStep = ((endX - startX) / steps);
-                float yStep = 0;
+        long start = SystemClock.uptimeMillis();
+        long downTime = SystemClock.uptimeMillis();
+        long eventTime = SystemClock.uptimeMillis() + 50;
 
-                long start = SystemClock.uptimeMillis();
-                long downTime = SystemClock.uptimeMillis();
-                long eventTime = SystemClock.uptimeMillis() + 50;
+        MotionEvent event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, startX, fixedY, 0);
+        rallyStageRecyclerView.dispatchTouchEvent(event);
 
-                MotionEvent event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, startX, startY, 0);
-                rallyStageRecyclerView.dispatchTouchEvent(event);
+        for (int i = 0; i < steps; i++) {
+            eventTime = SystemClock.uptimeMillis() + (i + 1) * 100;
+            event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, startX + (i * xStep), fixedY, 0);
+            rallyStageRecyclerView.dispatchTouchEvent(event);
 
-                for (int i = 0; i < steps; i++) {
-                    eventTime = SystemClock.uptimeMillis() + (i + 1) * 100;
-                    event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, startX + (i * xStep), startY, 0);
-                    rallyStageRecyclerView.dispatchTouchEvent(event);
+        }
 
-                }
-                event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, endX, endY, 0);
-                rallyStageRecyclerView.dispatchTouchEvent(event);
+        event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, endX, fixedY, 0);
+        rallyStageRecyclerView.dispatchTouchEvent(event);
 
-                long end = SystemClock.uptimeMillis();
-                Log.i("tiempo", String.valueOf((end - start)));
-            }});
+        long end = SystemClock.uptimeMillis();
+        Log.i("tiempo", String.valueOf((end - start)));
+
+
     }
 
     private List<RallyStage> getRallyStages() {
