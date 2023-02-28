@@ -88,13 +88,8 @@ public class StageMapFragment extends Fragment {
     };
 
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissionsIfNecessary(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
-            return;
-        }
-
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
         // Check if the user has granted permission to access their location
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -201,8 +196,10 @@ public class StageMapFragment extends Fragment {
 
 
         MyLocationNewOverlay myLocationNewOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(requireContext()), mapView);
+        //getLastKnownLocation()
         myLocationNewOverlay.enableMyLocation();
         mapView.getOverlays().add(myLocationNewOverlay);
+
         //Brujula
         CompassOverlay compassOverlay = new CompassOverlay(requireContext(), new InternalCompassOrientationProvider(requireContext()), mapView);
         compassOverlay.enableCompass();
@@ -221,7 +218,7 @@ public class StageMapFragment extends Fragment {
         //Punto llegada
 
         Marker m2 = new Marker(mapView);
-        GeoPoint llegada = new GeoPoint(39.9416247,-0.2177557);
+        GeoPoint llegada = new GeoPoint(39.943528, -0.218595);
         m2.setPosition(llegada);
         m2.setTextLabelFontSize(40);
         m2.setIcon(getResources().getDrawable(R.drawable.ic_baseline_location_red_48));
@@ -237,22 +234,7 @@ public class StageMapFragment extends Fragment {
         Polyline polyline = new Polyline(mapView, true);
 
         List<GeoPoint> points = new ArrayList<>();
-        points.add(salida);
-        points.add(new GeoPoint(39.943386, -0.209726));
-        points.add(new GeoPoint(39.942551, -0.208674));
-        points.add(new GeoPoint(39.942603, -0.208432));
-        points.add(new GeoPoint(39.942298, -0.208022));
-        points.add(new GeoPoint(39.942870, -0.206300));
-        points.add(new GeoPoint(39.944292, -0.207585));
-        points.add(new GeoPoint(39.944452, -0.207322));
-        points.add(new GeoPoint(39.945163, -0.207531));
-        points.add(new GeoPoint(39.945439, -0.207778));
-        points.add(new GeoPoint(39.945855, -0.207156));
-        points.add(new GeoPoint(39.946175, -0.207060));
-        points.add(new GeoPoint(39.946882, -0.207816));
-        points.add(new GeoPoint(39.947014, -0.208447));
-        points.add(new GeoPoint(39.947927, -0.210543));
-        points.add(new GeoPoint(39.946207, -0.212266));
+        puntosTramo1(salida, points);
         points.add(llegada);
         polyline.setPoints(points);
 
@@ -261,18 +243,34 @@ public class StageMapFragment extends Fragment {
         polyline.setVisible(true);
 
         mapView.getOverlays().add(polyline);
-// Add the Polyline to the MapVie
 
         stageMapBinding.buttonCenterLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("clicked", "yes");
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    // Request the location permission if it has not been granted
-                    String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION}; //Podriamos añadir: WRITE_EXTERNAL_STORAGE
-                    ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_PERMISSIONS_REQUEST_CODE);
-                } else {
+                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissionsIfNecessary(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+                }
+                LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+                boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+                if (!isGpsEnabled) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                    builder.setTitle("GPS desactivado");
+                    builder.setMessage("Activa el GPS para obtener las direcciones");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("Cancelar", null);
+                    builder.show(); //buider.create.show()
+
+                    return;
+                }
+                else {
                     // Get the last known location
                     mFusedLocationClient.getLastLocation().addOnSuccessListener(
                             location -> {
@@ -292,6 +290,16 @@ public class StageMapFragment extends Fragment {
                 LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
                 boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
+                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissionsIfNecessary(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+                }
+
+                if (mFusedLocationClient == null) {
+                    Toast.makeText(requireContext(), "No se pudo obtener la ubicación del usuario", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
                 if (!isGpsEnabled) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                     builder.setTitle("GPS desactivado");
@@ -303,30 +311,58 @@ public class StageMapFragment extends Fragment {
                             startActivity(intent);
                         }
                     });
-                    builder.show(); //buider.create.show()  builder.setNegativeButton("Cancel", null);
-                    return;
+                    builder.setNegativeButton("Cancelar", null);
+                    builder.show(); //buider.create.show()N
+                } else {
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(
+                            location -> {
+                                if (location != null) {
+                                    mLastLocation = location;
+                                    GeoPoint usuario = new GeoPoint(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                                    getDirections(usuario, salida);
+                                }
+                            });
+
                 }
-
-                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissionsIfNecessary(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
-                    return;
-                }
-
-                MyLocationNewOverlay myLocationNewOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(requireContext()), mapView);
-                myLocationNewOverlay.enableMyLocation();
-
-                startLocationUpdates();
-
-                if (userLocation == null) {
-                    Toast.makeText(requireContext(), "No se pudo obtener la ubicación del usuario", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                String endLocation = "longitude,latitude"; // replace with your desired end location
-                getDirections(userLocation, salida);
             }
         });
+    }
+
+    private void puntosTramo1(GeoPoint salida, List<GeoPoint> points) {
+        points.add(salida);
+        points.add(new GeoPoint(39.943386, -0.209726));
+        points.add(new GeoPoint(39.942551, -0.208674));
+        points.add(new GeoPoint(39.942603, -0.208432));
+        points.add(new GeoPoint(39.942298, -0.208022));
+        points.add(new GeoPoint(39.942870, -0.206300));
+        points.add(new GeoPoint(39.944292, -0.207585));
+        points.add(new GeoPoint(39.944452, -0.207322));
+        points.add(new GeoPoint(39.945163, -0.207531));
+        points.add(new GeoPoint(39.945439, -0.207778));
+        points.add(new GeoPoint(39.945855, -0.207156));
+        points.add(new GeoPoint(39.946175, -0.207060));
+        points.add(new GeoPoint(39.946882, -0.207816));
+        points.add(new GeoPoint(39.947014, -0.208447));
+        points.add(new GeoPoint(39.947927, -0.210543));
+        points.add(new GeoPoint(39.946207, -0.212171));
+        points.add(new GeoPoint(39.946207, -0.212266));
+        points.add(new GeoPoint(39.945318, -0.213161));
+        points.add(new GeoPoint(39.945198, -0.213090));
+        points.add(new GeoPoint(39.945140, -0.213046));
+        points.add(new GeoPoint(39.945089, -0.213039));
+        points.add(new GeoPoint(39.944078, -0.213822));
+        points.add(new GeoPoint(39.943176, -0.214482));
+        points.add(new GeoPoint(39.943658, -0.215436));
+        points.add(new GeoPoint(39.943721, -0.215977));
+        points.add(new GeoPoint(39.943987, -0.216627));
+        points.add(new GeoPoint(39.944491, -0.217366));
+        points.add(new GeoPoint(39.945395, -0.218435));
+        points.add(new GeoPoint(39.945582, -0.218710));
+        points.add(new GeoPoint(39.944980, -0.219294));
+        points.add(new GeoPoint(39.944709, -0.219045));
+        points.add(new GeoPoint(39.944532, -0.218925));
+        points.add(new GeoPoint(39.944308, -0.218831));
+        points.add(new GeoPoint(39.944308, -0.218831));
     }
 
     /*private void createMarker(double latitude, double longitude, String title, String description) {
