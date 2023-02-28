@@ -1,9 +1,18 @@
 package com.example.transbetxi.ui.main.view;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.transbetxi.ui.main.view.StageMapFragment;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,17 +22,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.transbetxi.R;
 import com.example.transbetxi.data.RallyStage;
 import com.example.transbetxi.ui.main.rvAdapter.RallyStageAdapter;
 import com.example.transbetxi.ui.main.viewmodel.MainViewModel;
 
+
+import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +107,7 @@ public class MainFragment extends Fragment {
                         new UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                // TODO: OnUnshare
+                                //Llamada a generar un trayecto
                             }
                         }
                 ));

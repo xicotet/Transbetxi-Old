@@ -24,12 +24,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.transbetxi.R;
 import com.example.transbetxi.data.DirectionsResponse;
 import com.example.transbetxi.data.OpenRouteServiceApi;
+import com.example.transbetxi.data.Photo;
 import com.example.transbetxi.databinding.FragmentStageMapBinding;
+import com.example.transbetxi.ui.main.rvAdapter.PhotoAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -69,6 +72,9 @@ public class StageMapFragment extends Fragment {
     private Location mLastLocation;
     private GeoPoint userLocation;
     private ArrayList<GeoPoint> routePoints = new ArrayList<>();
+    List<Photo> photos;
+    private Button buttonFotos;
+    private PhotoAdapter adapter;
 
 
     private final LocationListener locationListener = new LocationListener() {
@@ -86,6 +92,7 @@ public class StageMapFragment extends Fragment {
         @Override
         public void onProviderDisabled(String provider) {}
     };
+
 
     private void startLocationUpdates() {
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -112,20 +119,6 @@ public class StageMapFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }*/
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Context ctx = getContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openrouteservice.org/v2/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        api = retrofit.create(OpenRouteServiceApi.class);
-        super.onCreate(savedInstanceState);
-    }
 
     private void getDirections(GeoPoint startLocation, GeoPoint endLocation) {
         Call<DirectionsResponse> call = api.getDirections(
@@ -172,6 +165,30 @@ public class StageMapFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Context ctx = getContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.openrouteservice.org/v2/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        api = retrofit.create(OpenRouteServiceApi.class);
+
+        photos = new ArrayList<>();
+        // Add some sample photos for testing
+        photos.add(new Photo("/path/to/image.jpg"));
+        photos.add(new Photo("/path/to/image.jpg"));
+        photos.add(new Photo("/path/to/image.jpg"));
+
+        // Set up the photo adapter
+        adapter = new PhotoAdapter(photos);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -184,6 +201,15 @@ public class StageMapFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        buttonFotos = view.findViewById(R.id.button_fotos);
+        buttonFotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFotosBottomSheet(v);
+            }
+        });
+
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION}; //Podriamos añadir: WRITE_EXTERNAL_STORAGE
         requestPermissionsIfNecessary(permissions);
@@ -328,6 +354,14 @@ public class StageMapFragment extends Fragment {
         });
     }
 
+    public void openFotosBottomSheet(View view) {
+        // Create a new instance of the bottom sheet dialog fragment
+        FotosBottomSheetDialogFragment bottomSheetDialogFragment = new FotosBottomSheetDialogFragment((ArrayList<Photo>) photos);
+
+        // Show the bottom sheet dialog fragment
+        bottomSheetDialogFragment.show(getChildFragmentManager(), bottomSheetDialogFragment.getTag());
+    }
+
     private void puntosTramo1(GeoPoint salida, List<GeoPoint> points) {
         points.add(salida);
         points.add(new GeoPoint(39.943386, -0.209726));
@@ -395,7 +429,7 @@ public class StageMapFragment extends Fragment {
         }
     }
 
-    private void requestPermissionsIfNecessary(String[] permissions) {
+    public void requestPermissionsIfNecessary(String[] permissions) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(requireActivity(), permission)
