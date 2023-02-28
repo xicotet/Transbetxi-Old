@@ -429,10 +429,10 @@ public class StageMapFragment extends Fragment {
         }
     }
 
-    public void requestPermissionsIfNecessary(String[] permissions) {
+    private void requestPermissionsIfNecessary(String[] permissions) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(requireActivity(), permission)
+            if (ContextCompat.checkSelfPermission(requireContext(), permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 // Permission is not granted
                 permissionsToRequest.add(permission);
