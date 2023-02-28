@@ -126,23 +126,17 @@ public class MainFragment extends Fragment {
             public void run() {
                 if(!swipeHelper.getFirstSwipeHasOccurred()){
                     createSwipeItemAnimation(0);
-
                 }
-
             }
-        }, 500);
+        }, 800);
 
         rallyStageRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 //Return item to its original position
-                    Log.i("valencianista", String.valueOf(swipeHelper.recoverQueue));
-                    rallyStageRecyclerView.getAdapter().notifyItemChanged(0);
-                    Log.i("valencianista", String.valueOf(swipeHelper.recoverQueue));
-
-                Log.i("sellama", "recoverItem");
+                rallyStageRecyclerView.getAdapter().notifyItemChanged(0);
             }
-        }, 1000);
+        }, 1400);
 
 
         return view;
