@@ -8,4 +8,4 @@ Under construction 🚧
 
 | ![Home](map.jpg) | ![Search](map-route.jpg) |
 |:------------------------------------:|:-----------------------------:|
-| Map Screen                           | Map Screen displaying a doute                 |
+| Map Screen                           | Map Screen displaying a route                 |
