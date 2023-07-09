@@ -2,10 +2,10 @@
 Under construction 🚧 
 
 ## Screenshots and video
-| ![Home](home.jpg) | ![Search](home-item-scrolled.jpg) |
+| ![Home Screen](home.jpg) | ![Map Screen](map.jpg)  |
 |:------------------------------------:|:-----------------------------:|
-| Home Screen                           | Home Screen with an item dragged                  |
+| Home Screen                           |   Map Screen                |
 
-| ![Home](map.jpg) | ![Search](map-route.jpg) |
+| ![Home Screen with an item dragged](home-item-scrolled.jpg) | ![Search](map-route.jpg) |
 |:------------------------------------:|:-----------------------------:|
-| Map Screen                           | Map Screen displaying a route                 |
+|            Home Screen with an item dragged                 | Map Screen displaying a route                 |
