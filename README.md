@@ -1,7 +1,7 @@
 ## Current App State
 Under construction 🚧 
 
-## Screenshots and video
+## Screenshots
 | ![Home Screen](home.jpg) | ![Map Screen](map.jpg)  |
 |:------------------------------------:|:-----------------------------:|
 | Home Screen                           |   Map Screen                |
