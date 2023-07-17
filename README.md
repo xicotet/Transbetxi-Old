@@ -12,9 +12,9 @@ This well-established competition revolves around this concept, and this year it
 
 🏁 Join us as we celebrate the legacy of the **Rally Transbetxí**.
 
-📆**Friday, April 5 2023, until Saturday, April 6 2023**. 
+📆 **Friday, April 5 2023**, until **Saturday, April 6 2023**. 
 
-📌**Betxí, Castellón (Spain)**
+📌 **Betxí, Castellón (Spain)**
 
 ## Current App State
 Under construction 🚧 
