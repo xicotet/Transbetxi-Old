@@ -3,6 +3,7 @@ Just like every year since 1988, the Rally Transbetxí returns to Betxí, Castel
 
 With the increased power comes the need for improved brakes, suspensions, and tires. Even so, motocultores remain somewhat unstable, leading to the formation of two-member teams: a rider and a co-pilot who acts as a counterbalance during turns, much like a sidecar passenger.
 
+![Motocultor Vehicle](motoret.jpg)
 This well-established competition revolves around this concept, and this year it introduces an exciting addition: an Android application that allows spectators to follow live timing results and get real-time updates on the race progress. Now you can stay connected with all the action happening on the track, witnessing the 'Motocultores' incredible speed and skill firsthand. 
 
 This special version of the fantastic and immensely entertaining motor event will take place on the night of Friday, April 10, until Saturday, April 11. The race will be held on a circuit specifically designed for this unique and thrilling challenge. Join us as we celebrate the legacy of the Rally Transbetxí and embrace the new adventure of the 'Motorets', experiencing the exhilarating world of motocultor racing at its best! 
