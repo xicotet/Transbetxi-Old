@@ -11,7 +11,9 @@ Photo credits: [Alejandro Tinieblas](https://www.alejandromilart.com/motorets-tr
 This well-established competition revolves around this concept, and this year it introduces an exciting addition: an Android application that allows spectators to follow live timing results and get real-time updates on the race progress. Now you can stay connected with all the action happening on the track, witnessing the motocultores incredible speed and skill firsthand 
 
 🏁 Join us as we celebrate the legacy of the **Rally Transbetxí**.
+
 📆**Friday, April 5 2023, until Saturday, April 6 2023**. 
+
 📌**Betxí, Castellón (Spain)**
 
 ## Current App State
