@@ -16,6 +16,8 @@ This well-established competition revolves around this concept, and this year it
 
 📍 **Betxí, Castellón (Spain)**
 
+🌐 [https://www.transbetxi.com/](https://www.transbetxi.com/)
+
 ## Current App State
 Under construction 🚧 
 
