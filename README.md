@@ -20,6 +20,7 @@ This well-established competition revolves around this concept, and this year it
 
 ## Current App State
 Under construction 🚧 
+The project is currently undergoing redevelopment, with plans to utilize Kotlin, Jetpack Compose, and best practices for future enhancements and improvements.
 
 ## Screenshots
 | ![Home Screen](home.jpg) | ![Map Screen](map.jpg)  |
